@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import jsonify
 
 import task
 
@@ -13,6 +14,12 @@ def hello():
     result = task.hello.delay(name)
     result.wait()
     return render_template('index.html', celery=result)
+
+@app.route("/ping")
+def salt_ping():
+    result = task.ping.delay()
+    result.wait()
+    return 'ok',200 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
